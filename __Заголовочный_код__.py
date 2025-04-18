@@ -75,7 +75,11 @@ def Добавить_поле(класс, название, значение, ф
         'rjust': 'Дополнить_слева'
     },
     'str': {
-        'format': 'Формат'
+        'format': 'Формат',
+        'encode': 'Закодовать'
+    },
+    ('bytes', 'bytearray'): {
+        'decode': 'Раскодовать'
     },
     ('list', 'bytearray'): {
         'append': 'Добавить',
@@ -133,7 +137,7 @@ def Добавить_поле(класс, название, значение, ф
     },
     'int': {
         'bit_length': 'Длина_в_битах',
-        'to_bytes': ( 'В_байты', { 'length': 'длина', 'byteorder': 'порядок', 'signed': 'со_знаком' }, { (1, 'byteorder'): { 'МлСт': 'little', 'СтМл': 'big' } } ),
+        'to_bytes': ( 'В_байты', { 'length': 'длина', 'byteorder': 'порядок', 'signed': 'со_знаком' }, { (2, 'byteorder'): { 'МлСт': 'little', 'СтМл': 'big' } } ),
         'from_bytes': ( 'Из_байтов', { 'bytes': 'байты', 'byteorder': 'порядок', 'signed': 'со_знаком' }, { (1, 'byteorder'): { 'МлСт': 'little', 'СтМл': 'big' } } ),
         '.numerator': 'числитель',
         '.denominator': 'знаменатель'
