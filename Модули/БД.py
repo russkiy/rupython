@@ -262,6 +262,47 @@ def Перевести_код_запроса(текст):
     запрос = Собрать_запрос(переведённые_токены)
     return запрос
 
+Переводы_ошибок = {
+    r"OperationalError: no such table: (.+)": r'Таблица "\1" не существует.',
+    r"OperationalError: database is locked": r'База данных заблокована.',
+    r"OperationalError: near \"(.+)\": syntax error": r'Синтаксическая ошибка около "\1".',
+    r"OperationalError: table (.+) already exists": r'Таблица "\1" уже существует.',
+    r"OperationalError: no such column: (.+)": r'Столбец "\1" не существует.',
+    r"OperationalError: (.+) has no column named (.+)": r'Таблица "\1" не имеет столбца "\2".',
+    r"OperationalError: cannot open database file": r'Не удалось открыть файл базы данных.',
+    r"OperationalError: database or disk is full": r'База данных или диск переполнены.',
+    r"OperationalError: attempt to write a readonly database": r'Попытка записи в базу данных, доступную только для чтения.',
+    r"OperationalError: no such index: (.+)": r'Индекс "\1" не существует.',
+    r"OperationalError: too many SQL variables": r'Слишком много переменных в запросе.',
+    r"OperationalError: maximum recursion depth exceeded": r'Превышена максимальная глубина рекурсии в запросе.',
+    r"OperationalError: incomplete input": r'Неполный запрос.',
+    r"OperationalError: malformed database schema \((.+)\)": r'Некорректная схема базы данных: \1.',
+    r"OperationalError: file is not a database": r'Файл не является базой данных.',
+    r"DatabaseError: database disk image is malformed": r'Образ диска базы данных повреждён.',
+    r"ProgrammingError: incorrect number of bindings supplied. The statement has (\d+) parameters, and (\d+) were supplied": r'Неверное количество переданных параметров. Ожидаемых запросом параметров - \1, передано - \2.',
+    r"ProgrammingError: You did not supply a value for binding (\d+)": r'Не указано значение для параметра \1.',
+    r"ProgrammingError: Cannot operate on a closed database": r'Невозможно выполнить операцию на закрытой базе данных.',
+    r"ProgrammingError: Cannot operate on a closed cursor": r'Невозможно выполнить операцию на закрытом указателе.',
+    r"ProgrammingError: column (.+) is not unique": r'Столбец "\1" должен быть уникальным.',
+    r"ProgrammingError: number of bound variables does not match number of parameters": r'Количество привязанных переменных не соответствует количеству параметров.',
+    r"ProgrammingError: only one statement is allowed": r'Разрешено выполнять только один запрос за раз.',
+    r"IntegrityError: NOT NULL constraint failed: (.+)": r'Нарушение ограничения НЕ ПУСТО для столбца "\1".',
+    r"IntegrityError: UNIQUE constraint failed: (.+)": r'Нарушение ограничения УНИКАЛЬНЫЙ для столбца "\1".',
+    r"IntegrityError: FOREIGN KEY constraint failed": r'Нарушение ограничения ВНЕШНИЙ КЛЮЧ.',
+    r"IntegrityError: CHECK constraint failed: (.+)": r'Нарушение ограничения ПРОВЕРЯТЬ: \1.',
+    r"IntegrityError: PRIMARY KEY must be unique": r'Первичный ключ должен быть уникальным.',
+    r"InterfaceError: Error binding parameter (\d+) - probably unsupported type": r'Ошибка привязки параметра \1 - вероятно, неподдерживаемый тип.',
+    r"InterfaceError: Cursor needed to be reset because of commit/rollback and can no longer be fetched from": r'Указатель должен быть сброшен из-за утверждения или отката и больше не может быть использован.',
+    r"Warning: You can only execute one statement at a time": r'Можно выполнять только один запрос за раз.',
+    r"NotSupportedError: (.+) not supported by this database": r'Операция "\1" не поддерживается этой базой данных.',
+    r"OperationalError: too many connections": r'Слишком много активных подключений к базе данных.',
+    r"OperationalError: no such function: (.+)": r'Функция "\1" не существует.',
+    r"OperationalError: no such module: (.+)": r'Модуль "\1" не существует.',
+    r"ProgrammingError: parameters are of unsupported type": r'Параметры имеют неподдерживаемый тип.',
+    r"OperationalError: interrupted": r'Операция была прервана.',
+    r"OperationalError: out of memory": r'Недостаточно памяти для выполнения операции.'
+}
+
 class Указатель():
     def __init__(здесь, курсор):
         здесь._курсор = курсор
