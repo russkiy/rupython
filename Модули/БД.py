@@ -82,8 +82,8 @@ import sqlite3
 
     'ОПРЕДЕЛИВ': 'WITH',
     'ВЫБОР': 'CASE',
-    'ЕСЛИ': 'WHEN',
-    'ТО': 'THEN',
+    'ПРИ': 'WHEN',
+    'ЭТО': 'THEN',
     'КОНЕЦ': 'END',
     'РЕКУРСИВНО': 'RECURSIVE',
 
