@@ -1,9 +1,7 @@
 import sqlite3
+import re as РегВыр
 
 Ошибка = sqlite3.Error
-ОшибкаБазыДанных = sqlite3.DatabaseError
-ОшибкаПрограммования = sqlite3.ProgrammingError
-ОшибкаОперации = sqlite3.OperationalError
 
 Разбор_объявленных_типов = sqlite3.PARSE_DECLTYPES
 Разбор_названий_столбцов = sqlite3.PARSE_COLNAMES
@@ -263,61 +261,75 @@ def Перевести_код_запроса(текст):
     return запрос
 
 Переводы_ошибок = {
-    r"OperationalError: no such table: (.+)": r'Таблица "\1" не существует.',
-    r"OperationalError: database is locked": r'База данных заблокована.',
-    r"OperationalError: near \"(.+)\": syntax error": r'Синтаксическая ошибка около "\1".',
-    r"OperationalError: table (.+) already exists": r'Таблица "\1" уже существует.',
-    r"OperationalError: no such column: (.+)": r'Столбец "\1" не существует.',
-    r"OperationalError: (.+) has no column named (.+)": r'Таблица "\1" не имеет столбца "\2".',
-    r"OperationalError: cannot open database file": r'Не удалось открыть файл базы данных.',
-    r"OperationalError: database or disk is full": r'База данных или диск переполнены.',
-    r"OperationalError: attempt to write a readonly database": r'Попытка записи в базу данных, доступную только для чтения.',
-    r"OperationalError: no such index: (.+)": r'Индекс "\1" не существует.',
-    r"OperationalError: too many SQL variables": r'Слишком много переменных в запросе.',
-    r"OperationalError: maximum recursion depth exceeded": r'Превышена максимальная глубина рекурсии в запросе.',
-    r"OperationalError: incomplete input": r'Неполный запрос.',
-    r"OperationalError: malformed database schema \((.+)\)": r'Некорректная схема базы данных: \1.',
-    r"OperationalError: file is not a database": r'Файл не является базой данных.',
-    r"DatabaseError: database disk image is malformed": r'Образ диска базы данных повреждён.',
-    r"ProgrammingError: incorrect number of bindings supplied. The statement has (\d+) parameters, and (\d+) were supplied": r'Неверное количество переданных параметров. Ожидаемых запросом параметров - \1, передано - \2.',
-    r"ProgrammingError: You did not supply a value for binding (\d+)": r'Не указано значение для параметра \1.',
-    r"ProgrammingError: Cannot operate on a closed database": r'Невозможно выполнить операцию на закрытой базе данных.',
-    r"ProgrammingError: Cannot operate on a closed cursor": r'Невозможно выполнить операцию на закрытом указателе.',
-    r"ProgrammingError: column (.+) is not unique": r'Столбец "\1" должен быть уникальным.',
-    r"ProgrammingError: number of bound variables does not match number of parameters": r'Количество привязанных переменных не соответствует количеству параметров.',
-    r"ProgrammingError: only one statement is allowed": r'Разрешено выполнять только один запрос за раз.',
-    r"IntegrityError: NOT NULL constraint failed: (.+)": r'Нарушение ограничения НЕ ПУСТО для столбца "\1".',
-    r"IntegrityError: UNIQUE constraint failed: (.+)": r'Нарушение ограничения УНИКАЛЬНЫЙ для столбца "\1".',
-    r"IntegrityError: FOREIGN KEY constraint failed": r'Нарушение ограничения ВНЕШНИЙ КЛЮЧ.',
-    r"IntegrityError: CHECK constraint failed: (.+)": r'Нарушение ограничения ПРОВЕРЯТЬ: \1.',
-    r"IntegrityError: PRIMARY KEY must be unique": r'Первичный ключ должен быть уникальным.',
-    r"InterfaceError: Error binding parameter (\d+) - probably unsupported type": r'Ошибка привязки параметра \1 - вероятно, неподдерживаемый тип.',
-    r"InterfaceError: Cursor needed to be reset because of commit/rollback and can no longer be fetched from": r'Указатель должен быть сброшен из-за утверждения или отката и больше не может быть использован.',
+    r"no such table: (.+)": r'Таблица "\1" не существует.',
+    r"database is locked": r'База данных заблокована.',
+    r"near \"(.+)\": syntax error": r'Синтаксическая ошибка около "\1".',
+    r"table (.+) already exists": r'Таблица "\1" уже существует.',
+    r"no such column: (.+)": r'Столбец "\1" не существует.',
+    r"(.+) has no column named (.+)": r'Таблица "\1" не имеет столбца "\2".',
+    r"cannot open database file": r'Не удалось открыть файл базы данных.',
+    r"database or disk is full": r'База данных или диск переполнены.',
+    r"attempt to write a readonly database": r'Попытка записи в базу данных, доступную только для чтения.',
+    r"no such index: (.+)": r'Индекс "\1" не существует.',
+    r"too many SQL variables": r'Слишком много переменных в запросе.',
+    r"maximum recursion depth exceeded": r'Превышена максимальная глубина рекурсии в запросе.',
+    r"incomplete input": r'Неполный запрос.',
+    r"malformed database schema \((.+)\)": r'Некорректная схема базы данных: \1.',
+    r"file is not a database": r'Файл не является базой данных.',
+    r"database disk image is malformed": r'Образ диска базы данных повреждён.',
+    r"incorrect number of bindings supplied. The statement has (\d+) parameters, and (\d+) were supplied": r'Неверное количество переданных параметров. Ожидаемых запросом параметров - \1, передано - \2.',
+    r"You did not supply a value for binding (\d+)": r'Не указано значение для параметра \1.',
+    r"Cannot operate on a closed database": r'Невозможно выполнить операцию на закрытой базе данных.',
+    r"Cannot operate on a closed cursor": r'Невозможно выполнить операцию на закрытом указателе.',
+    r"column (.+) is not unique": r'Столбец "\1" должен быть уникальным.',
+    r"number of bound variables does not match number of parameters": r'Количество привязанных переменных не соответствует количеству параметров.',
+    r"only one statement is allowed": r'Разрешено выполнять только один запрос за раз.',
+    r"NOT NULL constraint failed: (.+)": r'Нарушение ограничения НЕ ПУСТО для столбца "\1".',
+    r"UNIQUE constraint failed: (.+)": r'Нарушение ограничения УНИКАЛЬНЫЙ для столбца "\1".',
+    r"FOREIGN KEY constraint failed": r'Нарушение ограничения ВНЕШНИЙ КЛЮЧ.',
+    r"CHECK constraint failed: (.+)": r'Нарушение ограничения ПРОВЕРЯТЬ: \1.',
+    r"PRIMARY KEY must be unique": r'Первичный ключ должен быть уникальным.',
+    r"Error binding parameter (\d+) - probably unsupported type": r'Ошибка привязки параметра \1 - вероятно, неподдерживаемый тип.',
+    r"Cursor needed to be reset because of commit/rollback and can no longer be fetched from": r'Указатель должен быть сброшен из-за утверждения или отката и больше не может быть использован.',
     r"Warning: You can only execute one statement at a time": r'Можно выполнять только один запрос за раз.',
-    r"NotSupportedError: (.+) not supported by this database": r'Операция "\1" не поддерживается этой базой данных.',
-    r"OperationalError: too many connections": r'Слишком много активных подключений к базе данных.',
-    r"OperationalError: no such function: (.+)": r'Функция "\1" не существует.',
-    r"OperationalError: no such module: (.+)": r'Модуль "\1" не существует.',
-    r"ProgrammingError: parameters are of unsupported type": r'Параметры имеют неподдерживаемый тип.',
-    r"OperationalError: interrupted": r'Операция была прервана.',
-    r"OperationalError: out of memory": r'Недостаточно памяти для выполнения операции.'
+    r"(.+) not supported by this database": r'Операция "\1" не поддерживается этой базой данных.',
+    r"too many connections": r'Слишком много активных подключений к базе данных.',
+    r"no such function: (.+)": r'Функция "\1" не существует.',
+    r"no such module: (.+)": r'Модуль "\1" не существует.',
+    r"parameters are of unsupported type": r'Параметры имеют неподдерживаемый тип.',
+    r"interrupted": r'Операция была прервана.',
+    r"out of memory": r'Недостаточно памяти для выполнения операции.'
 }
+
+def Перевести_ошибку(исключение):
+    сообщение = str(исключение)
+    for шаблон, перевод in Переводы_ошибок.items():
+        совпадение = РегВыр.match(шаблон, сообщение)
+        if совпадение:
+            return РегВыр.sub(шаблон, перевод, сообщение)
+    return f"Неизвестная ошибка: {сообщение}"
 
 class Указатель():
     def __init__(здесь, курсор):
         здесь._курсор = курсор
 
     def Выполнить_запрос(здесь, запрос, параметры=()):
-        запрос = Перевести_код_запроса(запрос)
-        здесь._курсор.execute(запрос, параметры)
+        try:
+            запрос = Перевести_код_запроса(запрос)
+            здесь._курсор.execute(запрос, параметры)
+        except Ошибка as ош: raise Ошибка(Перевести_ошибку(ош)) from ош
 
     def Выполнить_запросы(здесь, запрос, последовательность_параметров):
-        запрос = Перевести_код_запроса(запрос)
-        здесь._курсор.executemany(запрос, последовательность_параметров)
+        try:
+            запрос = Перевести_код_запроса(запрос)
+            здесь._курсор.executemany(запрос, последовательность_параметров)
+        except Ошибка as ош: raise Ошибка(Перевести_ошибку(ош)) from ош
 
     def Выполнить_сценарий(здесь, сценарий):
-        скрипт = Перевести_код_запроса(сценарий)
-        здесь._курсор.executescript(скрипт)
+        try:
+            скрипт = Перевести_код_запроса(сценарий)
+            здесь._курсор.executescript(скрипт)
+        except Ошибка as ош: raise Ошибка(Перевести_ошибку(ош)) from ош
 
     def Извлечь_запись(здесь):
         return здесь._курсор.fetchone()
@@ -354,48 +366,67 @@ class Соединение():
         elif уровень_изоляции == 'ИСКЛЮЧИТЕЛЬНО': уровень_изоляции = 'EXCLUSIVE'
         else: уровень_изоляции = None
 
-        здесь._соединение = sqlite3.connect(
-            путь,
-            timeout=таймаут,
-            detect_types=обнаружение_типов,
-            isolation_level=уровень_изоляции,
-            check_same_thread=проверять_тот_же_ли_поток,
-            cached_statements=кэш_инструкций,
-            uri=является_ссылкой
-        )
+        try:
+            здесь._соединение = sqlite3.connect(
+                путь,
+                timeout=таймаут,
+                detect_types=обнаружение_типов,
+                isolation_level=уровень_изоляции,
+                check_same_thread=проверять_тот_же_ли_поток,
+                cached_statements=кэш_инструкций,
+                uri=является_ссылкой
+            )
+        except Ошибка as ош: raise Ошибка(Перевести_ошибку(ош)) from ош
 
     def Создать_указатель(здесь):
-        курсор = здесь._соединение.cursor()
-        return Указатель(курсор)
+        try:
+            курсор = здесь._соединение.cursor()
+            return Указатель(курсор)
+        except Ошибка as ош: raise Ошибка(Перевести_ошибку(ош)) from ош
 
     def Выполнить_запрос(здесь, запрос, параметры=()):
-        запрос = Перевести_код_запроса(запрос)
-        указатель = здесь._соединение.execute(запрос, параметры)
-        return Указатель(указатель)
+        try:
+            запрос = Перевести_код_запроса(запрос)
+            указатель = здесь._соединение.execute(запрос, параметры)
+            return Указатель(указатель)
+        except Ошибка as ош: raise Ошибка(Перевести_ошибку(ош)) from ош
 
-    def Выполнить_запросы(здесь, запрос, последовательность_параметров):
-        запрос = Перевести_код_запроса(запрос)
-        указатель = здесь._соединение.executemany(запрос, последовательность_параметров)
-        return Указатель(указатель)
+    def Выполнить_запросы(здесь, запрос, параметры):
+        try:
+            запрос = Перевести_код_запроса(запрос)
+            указатель = здесь._соединение.executemany(запрос, параметры)
+            return Указатель(указатель)
+        except Ошибка as ош: raise Ошибка(Перевести_ошибку(ош)) from ош
 
     def Выполнить_сценарий(здесь, сценарий):
-        скрипт = Перевести_код_запроса(сценарий)
-        здесь._соединение.executescript(скрипт)
+        try:
+            скрипт = Перевести_код_запроса(сценарий)
+            здесь._соединение.executescript(скрипт)
+        except Ошибка as ош: raise Ошибка(Перевести_ошибку(ош)) from ош
 
     def Создать_функцию(здесь, имя, количество_параметров, функция):
-        здесь._соединение.create_function(имя, количество_параметров, функция)
+        try: здесь._соединение.create_function(имя, количество_параметров, функция)
+        except Ошибка as ош: raise Ошибка(Перевести_ошибку(ош)) from ош
 
-    def Создать_агрегатную_функцию(здесь, имя, количество_параметров, класс_агрегатной_функции):
-        здесь._соединение.create_aggregate(имя, количество_параметров, класс_агрегатной_функции)
+    def Создать_агрегатную_функцию(здесь, имя, число_аргументов, класс):
+        try: здесь._соединение.create_aggregate(имя, число_аргументов)
+        except Ошибка as ош: raise Ошибка(Перевести_ошибку(ош)) from ош
 
     def Создать_сопоставление(здесь, имя, функция):
-        здесь._соединение.create_collation(имя, функция)
+        try: здесь._соединение.create_collation(имя, функция)
+        except Ошибка as ош: raise Ошибка(Перевести_ошибку(ош)) from ош
 
-    def Закрыть(здесь): здесь._соединение.close()
+    def Закрыть(здесь):
+        try: здесь._соединение.close()
+        except Ошибка as ош: raise Ошибка(Перевести_ошибку(ош)) from ош
 
-    def Утвердить(здесь): здесь._соединение.commit()
+    def Утвердить(здесь):
+        try: здесь._соединение.commit()
+        except Ошибка as ош: raise Ошибка(Перевести_ошибку(ош)) from ош
 
-    def Откатить(здесь): здесь._соединение.rollback()
+    def Откатить(здесь):
+        try: здесь._соединение.rollback()
+        except Ошибка as ош: raise Ошибка(Перевести_ошибку(ош)) from ош
 
     @property
     def В_транзакции(здесь): return здесь._соединение.in_transaction
