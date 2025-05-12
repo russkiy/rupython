@@ -1,4 +1,5 @@
 import random
+from rupython import __Общие_функции__
 
 # Управление
 def НачЗнач(a = None): return random.seed(a, version = 2)
@@ -10,7 +11,7 @@ def СлучБайты(n): return random.randbytes(n)
 
 # Целые числа
 def ИзДиапазона(*ПА, **ИА):
-    ИА = __Заголовочный_код__.Заменить_ключи_в_словаре(ИА, \
+    ИА = __Общие_функции__.Заменить_ключи_в_словаре(ИА, \
         { 'нач': 'start', 'кон': 'stop', 'шаг': 'step' })
     return random.randrange(*ПА, **ИА)
 def СлучЦелое(a, b): return random.randint(a, b)
@@ -19,12 +20,12 @@ def СлучБиты(k): return random.getrandbits(k)
 # Последовательности
 def ВыбратьИзПосл(посл): return random.choice(посл)
 def ВыбратьПосл(*ПА, **ИА):
-    ИА = __Заголовочный_код__.Заменить_ключи_в_словаре(ИА, \
+    ИА = __Общие_функции__.Заменить_ключи_в_словаре(ИА, \
         { 'посл': 'population', 'веса': 'weights', 'накоплВеса': 'cum_weights' })
     return random.choices(*ПА, **ИА)
 def Перемешать(x): return random.shuffle(x)
 def СлучПосл(*ПА, **ИА):
-    ИА = __Заголовочный_код__.Заменить_ключи_в_словаре(ИА, \
+    ИА = __Общие_функции__.Заменить_ключи_в_словаре(ИА, \
         { 'посл': 'population', 'колич': 'counts' })
     return random.sample(*ПА, **ИА)
 
