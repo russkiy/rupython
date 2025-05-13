@@ -3,12 +3,21 @@ import re as РегВыр
 
 Ошибка = sqlite3.Error
 
+Успешно = sqlite3.SQLITE_OK  # Успешное выполнение
+Отказ = sqlite3.SQLITE_DENY  # Отказ в операции
+Пропустить = sqlite3.SQLITE_IGNORE  # Игнорирование операции
+Занято = sqlite3.SQLITE_BUSY  # База данных занята
+Заблоковано = sqlite3.SQLITE_LOCKED  # База или таблица заблокирована
+Переполнено = sqlite3.SQLITE_FULL  # Диск или база переполнены
+
+# Уровни изоляции транзакций
+Отложенно = "DEFERRED"
+Немедленно = "IMMEDIATE"
+Исключительно = "EXCLUSIVE"
+
 Разбор_объявленных_типов = sqlite3.PARSE_DECLTYPES
 Разбор_названий_столбцов = sqlite3.PARSE_COLNAMES
-Успешно = sqlite3.SQLITE_OK
-Отказ = sqlite3.SQLITE_DENY
-Игнорировать = sqlite3.SQLITE_IGNORE
-Уровень_интерфейса_взаимодействия = sqlite3.apilevel
+
 Стиль_параметров = sqlite3.paramstyle
 Потокобезопасность = sqlite3.threadsafety
 
@@ -20,8 +29,9 @@ import re as РегВыр
     'ОТЛОЖЕННО': 'DEFERRED',
     'НЕМЕДЛЕННО': 'IMMEDIATE',
     'ИСКЛЮЧИТЕЛЬНО': 'EXCLUSIVE',
-    'ОТКАТИТЬ': 'ROLLBACK',
+    'ОТКАТИТЬ': 'ROLLBACK TRANSACTION',
     'ТОЧКА_СОХРАНЕНИЯ': 'SAVEPOINT',
+    'ОСВОБОДИТЬ': 'RELEASE SAVEPOINT',
     'НАСТРОИТЬ': 'PRAGMA',
 
     'ВЫБРАТЬ': 'SELECT',
@@ -47,6 +57,7 @@ import re as РегВыр
     'ПО ПРАВОЙ': 'RIGHT',
     'ПОЛНОСТЬЮ': 'FULL',
     'ПО': 'ON',
+    'К': 'TO',
     'ПЕРЕКРЁСТНО': 'CROSS',
     'ИСПОЛЬЗУЯ': 'USING',
 
@@ -80,6 +91,7 @@ import re as РегВыр
     'ПРЕДСТАВЛЕНИЕ': 'VIEW',
     'СТОЛБЕЦ': 'COLUMN',
     'СТРОГО': 'STRICT',
+    'ПЕРЕИМЕНОВАТЬ В': 'RENAME TO',
 
     'ЯВЛЯЕТСЯ ПУСТЫМ': 'IS NULL',
     'НЕ ЯВЛЯЕТСЯ ПУСТЫМ': 'IS NOT NULL',
