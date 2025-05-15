@@ -5,7 +5,7 @@ import os as ОС
 import sys as Система
 import importlib as Импортование
 import re as РегВыр
-from io import StringIO as СтроковыйВВ
+from io import StringIO as Текстовый_ВВ
 
 Служебные_слова = {
     'Да': 'True',
@@ -396,7 +396,7 @@ def Обработать_f_строки(слова, путь_к_файлу):
                         Вывести_текст_исключения(искл, 'при разборе f-строки', путь_к_файлу)
                     выражение = содержимое[нач_поз:поз-1]
                     try:
-                        токены_выражения = list(Разборщик_слов.generate_tokens(СтроковыйВВ(выражение).readline))
+                        токены_выражения = list(Разборщик_слов.generate_tokens(Текстовый_ВВ(выражение).readline))
                         токены_выражения = [(ток.type, ток.string, отступов) for ток in токены_выражения if ток.type != Разборщик_слов.ENDMARKER]
                         Выполнить_основные_замены(токены_выражения, Служебные_слова)
                         Выполнить_основные_замены(токены_выражения, Специальные_названия)
@@ -696,11 +696,17 @@ def Посчитать_физические_строки(путь_к_файлу,
     r"KeyError: '(.+)'": r'Ключ "\1" отсутствует в словаре.',
     r"invalid syntax\. Perhaps you forgot a comma\?": r'Ошибочный синтаксис. Может быть, вы забыли запятую?',
     r"invalid syntax": r'Синтаксическая ошибка в коде.',
+    r"unrecognized token: \"(.+?)\"": r'Неизвестный токен: "\1".',
     r"expected .+, got .+": r'Ожидался один тип данных, получен другой.',
-    r"int\(\) argument must be a string, a bytes-like object or a number, not '(\w+)'": r'Аргумент функции Цел() должен быть строкой, байтовым объектом или числом, а не "\1".',
+    r"int\(\) argument must be a string, a bytes-like object or a number, not '(\w+)'": r'Аргумент функции "Цел()" должен быть строкой, байтовым объектом или числом, а не "\1".',
     r"IndentationError: expected an indented block": r'Ожидался блок с отступом.',
     r"IndentationError: unindent does not match any outer indentation level": r'Уровень отступа не соответствует внешнему блоку.',
     r"TypeError: (\w+)\(\) takes \d+ positional arguments? but \d+ were given": r'Функция "\1" принимает меньше аргументов, чем было передано.',
+    r"'(.+)' is an invalid keyword argument for (.+)": r'"\1" не является верным названием аргумента для "\2".',
+    r"(.+) takes exactly one argument \((\d+) given\)": r'"\1" принимает ровно один аргумент (получено \2).',
+    r"(.+) takes exactly (\d+) arguments \((\d+) given\)": r'"\1" принимает аргументы в количестве ровно \2 (получено \3).',
+    r"(.+) takes at most (\d+) arguments \((\d+) given\)": r'"\1" принимает аргументы в количестве не более \2 (получено \3).',
+    r"(.+) takes at least (\d+) arguments \((\d+) given\)": r'"\1" принимает аргументы в количестве не менее \2 (получено \3).',
     r"ValueError: (.+)": r'Ошибка значения: \1.',
     r"AttributeError: '(\w+)' object is not callable": r'Объект типа "\1" не является вызываемым.',
     r"ImportError: No module named '(\w+)'": r'Ошибка импорта: модуль "\1" не найден.',
