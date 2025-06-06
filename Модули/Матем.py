@@ -3,8 +3,8 @@ import math
 Пи = math.pi
 e = math.e
 Тау = math.tau
-Бскн = math.inf
-НеЧ = math.nan
+Бесконечность = math.inf
+Не_число = math.nan
 
 def Сочетаний(n, k): return math.comb(n, k)
 def Перестановок(n, k): return math.perm(n, k)
@@ -12,8 +12,8 @@ def Факториал(n): return math.factorial(n)
 def НОД(*целые): return math.gcd(*целые)
 def НОК(*целые): return math.lcm(*целые)
 def ЦелКвКорень(n): return math.isqrt(n)
-def БольшЦел(x): return math.ceil(x)
-def МеньшЦел(x): return math.floor(x)
+def ЦелВверх(x): return math.ceil(x)
+def ЦелВниз(x): return math.floor(x)
 def Модуль(x): return math.fabs(x)
 def УмножСлож(x, y, z): return math.fma(x, y, z)
 def Остаток(x, y): return math.fmod(x, y)
