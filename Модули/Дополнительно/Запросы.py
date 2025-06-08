@@ -3,7 +3,7 @@ import requests
 Словарь_параметров_запроса = {
     'параметры': 'params',
     'данные': 'data',
-    'данные_json': 'json',
+    'упакованные_данные': 'json',
     'заголовки': 'headers',
     'куки': 'cookies',
     'аутентификация': 'auth',
@@ -46,7 +46,7 @@ class Ответ:
     def текст(экземпляр): return экземпляр._ответ.text
 
     @property
-    def json(экземпляр):
+    def упакованные_данные(экземпляр):
         try: return экземпляр._ответ.json()
         except requests.exceptions.JSONDecodeError: return None
 
