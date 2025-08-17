@@ -16,6 +16,7 @@ from io import StringIO as Текстовый_ВВ
     'не': 'not',
     'это': 'is',
     'Функция': 'def',
+    'функция': 'def',
     'Класс': 'class',
     'Общее': 'global', # Глобальное
     'НеМестное': 'nonlocal', # Нелокальное
@@ -521,6 +522,10 @@ def Проверить_соответствие_слов(слова, путь_к
         if поз != len(слова) - 1 and слова[поз + 1][0] not in (4, 61, 65):
             Вывести_исключение('Возврат'); return False
 
+    for поз in [i for i, x in enumerate(слова) if x[1] == 'функция']:
+        if поз == 0 or слова[поз - 1][1] != 'Асинхр':
+            Вывести_исключение('функция'); return False
+
     return True
 
 Циклы_со_счётчиком = []
@@ -740,7 +745,11 @@ def Посчитать_физические_строки(путь_к_файлу,
     r"No module named '(.+)'": r'Модуль под названием "\1" не найден.',
     r"unindent does not match any outer indentation level": r'Отступ не соответствует никакому окружающему уровню.',
     r"int too big to convert": r'Число слишком большое для преобразования.',
-    r"unexpected indent": r'Неожиданный отступ.'
+    r"unexpected indent": r'Неожиданный отступ.',
+    r"cannot import name '(.+)' from '(.+)' (unknown location)": r'Невозможно импортовать название "\1" из "\2" (неизвестное расположение).',
+    r"(.+) missing (.+) required positional arguments: (.+), and (.+)": r'Для функции "\1" требуется позиционных аргументов: \2 (\3 и \4).',
+    r"module '(.+)' has no attribute '(.+)'": r'Модуль "\1" не имеет атрибута "\1".',
+    r"string argument without an encoding": r'Строковый аргумент без кодования.'
 }
 
 def Очистить_файлы():
