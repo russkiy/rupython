@@ -98,7 +98,7 @@ from io import StringIO as Текстовый_ВВ
     'Отображение': ( 'map', None, False ),
     'Память': ( 'memoryview', { 'объект': 'object' }, True ),
     'Перебиратель': ( 'iter', None, False ),
-    'Перечислить': ( 'enumerate', { 'перебираемое': 'iterable', 'начало': 'start' }, False ),
+    'Перечень': ( 'enumerate', { 'перебираемое': 'iterable', 'начало': 'start' }, False ), # Перечислить
     'Подкласс': ( 'issubclass', None, False ),
     'Получить_поле': ( 'getattr', None, False ),
     'Поля': ( 'vars', None, False ),
